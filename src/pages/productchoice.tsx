@@ -1,3 +1,4 @@
 import React from 'react';
 import ProductChoice from '../components/productChoice/productchoice';
-export default () => <ProductChoice />;
+import { RouteComponentProps } from '@reach/router';
+export default (props: RouteComponentProps) => <ProductChoice />;

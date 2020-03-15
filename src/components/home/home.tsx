@@ -1,11 +1,13 @@
 import bg2 from '../../resources/images/bg2.jpg';
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from '@reach/router';
 const Div = styled.div`
   text-align: center;
   height: 100vh;
   background-image: url('${bg2}');
   background-size: cover;
+  background-position:center;
   background-repeat: no-repeat;
 `;
 const CenterOfThePage = styled.div`
@@ -78,7 +80,7 @@ const Home = () => (
       <ButtonContainer>
         <SlantedButton>
           {/*REMEMBER TO PUT A REACH LINK HERE*/}
-          Take me there
+          <Link to="/productchoice">Take me there</Link>
         </SlantedButton>
         <CentralButton>Go Shopping</CentralButton>
       </ButtonContainer>

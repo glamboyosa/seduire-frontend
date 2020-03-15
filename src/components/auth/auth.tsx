@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import gql from 'graphql-tag';
 import * as Login from '../../libs/gql/login';
 import * as SignIn from '../../libs/gql/user';
-import TokenHandler from '../../libs/tokenHolder';
+import { Redirect } from '@reach/router';
+import Modal from '../UI/Modal';
+import Spinner from '../UI/spinner';
 const Div = styled.div`
   text-align: center;
   position: relative;
@@ -76,13 +78,22 @@ const RedirectLink = styled.span`
     transform: translateY(25rem);
     font-size: 1.5rem;
   }
+  @media only screen and (max-width: 800px) {
+    ${props =>
+      !props.spellCheck &&
+      css`
+        & {
+          transform: translateY(40rem);
+        }
+      `}
+  }
 `;
 const Auth = () => {
+  let content;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authPage, setAuthPage] = useState(false);
   const [firstName, setFirstName] = useState('');
-  const [returnedFirstName, setReturnedFirstName] = useState<string>(null!);
   const [lastName, setLastName] = useState('');
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
@@ -119,9 +130,6 @@ const Auth = () => {
     }
   `;
 
-  useEffect(() => {
-    !!returnedFirstName && localStorage.setItem('firstName', returnedFirstName);
-  }, [returnedFirstName]);
   const [
     getUserDetails,
     { loading, error, data: loginResponse }
@@ -131,30 +139,20 @@ const Auth = () => {
     { loading: isSigningUp, error: signUpError, data: signUpResponse }
   ] = useMutation<SignIn.user, SignIn.user_variables>(SIGNUP_DETAILS);
   useEffect(() => {
-    setEmail('');
-    setPassword('');
-    setFirstName('');
-    setLastName('');
+    if (signUpResponse) {
+      setIsSignedUp(true);
+      setIsSignedIn(false);
+      setAuthPage(true);
+    }
     if (loginResponse) {
       localStorage.setItem('Auth Token', loginResponse.login.token);
-      TokenHandler(localStorage.getItem('Auth Token'));
       localStorage.setItem('expsIn', loginResponse.login.exp.toString());
       localStorage.setItem('expDate', loginResponse.login.expDate);
-      setReturnedFirstName(loginResponse.login.firstName);
-      setIsSignedIn(true);
       setIsSignedUp(false);
+      setIsSignedIn(true);
+      setAuthPage(false);
     }
-    if (signUpResponse) {
-      setIsSignedIn(false);
-      setIsSignedUp(true);
-    }
-    if (isSignedIn) {
-      setAuthPage(!authPage);
-    }
-    if (isSignedUp) {
-      console.log('yay');
-    }
-  }, [loginResponse, signUpResponse, isSignedIn, isSignedUp, authPage]);
+  }, [loginResponse, signUpResponse]);
   const authHandler = (e: React.SyntheticEvent) => {
     e.preventDefault();
     authPage
@@ -165,13 +163,17 @@ const Auth = () => {
     setFirstName('');
     setLastName('');
   };
-
-  if (loading || isSigningUp) return <p>Loading...</p>;
+  if (loading || isSigningUp) return <Spinner />;
   if (error || signUpError)
-    return <p>Error: {`${error?.message} or ${signUpError?.message}`}</p>;
-
+    return (
+      <Modal>Error: {`${error?.message} or ${signUpError?.message}`}</Modal>
+    );
+  if (loginResponse) {
+    content = <Redirect to="/productchoice" noThrow />;
+  }
   return authPage ? (
     <Div>
+      {content}
       <Title>
         Welcome back, <div>{localStorage.getItem('firstName') ?? '😊'}</div>
       </Title>

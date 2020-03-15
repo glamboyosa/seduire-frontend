@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { Link } from '@reach/router';
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 import * as Cart from '../../libs/gql/cart';
 import { FaShoppingBag } from 'react-icons/fa';
 import SideDrawer from '../UI/sidedrawer';
@@ -24,6 +25,7 @@ const Container = styled.div`
 `;
 const Logo = styled.div`
   position: absolute;
+
   top: 1rem;
   left: 1rem;
   font-size: 2rem;
@@ -171,14 +173,14 @@ const Nav = ({ cartCount }: AppProps) => {
   `;
   const [checkedState, setCheckedState] = useState(false);
   const [isClosed, setIsClosed] = useState(true);
-  const { data, loading, error, refetch } = useQuery<Cart.getCart, null>(
+  const [getCart, { data, loading, error }] = useLazyQuery<Cart.getCart, null>(
     GET_CART
   );
-  console.log(data);
+  console.log(data?.getCart);
   console.log(loading);
   console.log(error);
   const closedHandler = () => {
-    refetch();
+    getCart();
     setIsClosed(!isClosed);
   };
   const content = [
@@ -193,11 +195,15 @@ const Nav = ({ cartCount }: AppProps) => {
   console.log(cartCount);
   return (
     <Container spellCheck={checkedState}>
-      <SideDrawer clicked={closedHandler} closed={isClosed} content={[]} />
+      <SideDrawer
+        clicked={closedHandler}
+        closed={isClosed}
+        content={[] ?? data?.getCart}
+      />
       <Logo>
-        {/* <Link href="/"> */}
-        <span className="span">Seduire</span>
-        {/* </Link> */}
+        <Link className="span" to="/">
+          <span className="span">Seduire</span>
+        </Link>
       </Logo>
       <Input
         checked={checkedState}
@@ -209,8 +215,7 @@ const Nav = ({ cartCount }: AppProps) => {
       <Navigation spellCheck={checkedState}>
         <ul className="navigation">
           <li className="navigation__item">
-            Log In/Sign Up
-            {/* <Link href="/auth">Log In/Sign Up</Link> */}
+            <Link to="/auth">Log In/Sign Up</Link>
           </li>
           <li className="navigation__item">
             <div className="navigation__item--cart">

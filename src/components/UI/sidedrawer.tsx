@@ -111,7 +111,7 @@ const SideDrawerComponent = ({ closed, clicked, content }: AppProps) => {
         <Button onClick={clicked} />
       </ButtonHandler>
       {content.length !== 0 ? (
-        content.slice(0, 3).map(el => {
+        content!.slice(0, 3).map(el => {
           return (
             <CartItemContainer>
               <CartItem>
