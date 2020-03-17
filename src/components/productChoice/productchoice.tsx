@@ -50,7 +50,7 @@ const LinkContainer = styled.span`
 const ProductChoice = () => {
   return (
     <Div>
-      {/*pass data down into Nav*/}
+      {/*Remove Nav once you have products*/}
       <Nav cartCount={0} />
       <ItemComponent>
         <ItemText>Shop Men's Clothing</ItemText>
@@ -67,7 +67,7 @@ const ProductChoice = () => {
       <ItemComponent>
         <ItemText>Shop All Clothing</ItemText>
         <LinkContainer>
-          <Link to="/products/all">Take me there &rarr;</Link>
+          <Link to="/products">Take me there &rarr;</Link>
         </LinkContainer>
       </ItemComponent>
     </Div>

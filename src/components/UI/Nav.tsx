@@ -6,6 +6,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import * as Cart from '../../libs/gql/cart';
 import { FaShoppingBag } from 'react-icons/fa';
 import SideDrawer from '../UI/sidedrawer';
+import useCartCalculator from '../../libs/hooks/useCartCalculator';
 type AppProps = {
   cartCount: Number;
 };
@@ -176,6 +177,7 @@ const Nav = ({ cartCount }: AppProps) => {
   const [getCart, { data, loading, error }] = useLazyQuery<Cart.getCart, null>(
     GET_CART
   );
+
   console.log(data?.getCart);
   console.log(loading);
   console.log(error);
