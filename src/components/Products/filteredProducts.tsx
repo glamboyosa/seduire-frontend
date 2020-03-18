@@ -5,11 +5,16 @@ import * as Cart from '../../libs/gql/cart';
 import gql from 'graphql-tag';
 import Nav from '../UI/Nav';
 import useCartCalculator from '../../libs/hooks/useCartCalculator';
-import ProductsComponent from './products';
+import ProductsComponent from './choiceProducts';
+import { useParams } from '@reach/router';
 const All = () => {
+  const sex = useParams();
+  console.log('param is', sex);
+  sex.choice === 'men' ? (sex.choice = 'Male') : (sex.choice = 'Female');
+  console.log(sex.choice);
   const PRODUCTS = gql`
     query {
-      getProducts {
+      getCategory(sex: "${sex.choice}"){
         _id
         description
         creator
@@ -29,17 +34,9 @@ const All = () => {
       }
     }
   `;
-  // move this logic into the checkout component to redirect users
-  const IS_LOGGED_IN = gql`
-    query IsUserLoggedIn {
-      isLoggedIn @client
-    }
-  `;
 
-  const { data: cacheData } = useQuery(IS_LOGGED_IN);
-  console.log('is user logged in', cacheData.isLoggedIn);
   const { data, loading, error: productError } = useQuery<
-    Products.getProducts,
+    Products.getCategory,
     null
   >(PRODUCTS);
   const { data: cartData, loading: cartLoading, error: cartError } = useQuery<
@@ -50,7 +47,6 @@ const All = () => {
   return (
     <div>
       <Nav cartCount={cartCount} />;
-      {/* do not forget to pass down data, loading and product error*/}
       <ProductsComponent
         content={data}
         loading={loading}

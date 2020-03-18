@@ -3,32 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { ApolloClient, InMemoryCache, HttpLink } from 'apollo-boost';
-import { ApolloProvider } from '@apollo/react-hooks';
-const cache = new InMemoryCache();
-const link = new HttpLink({
-  uri: 'https://seduire-backend.herokuapp.com/api/graphql',
-  headers: {
-    Authorization: localStorage.getItem('Auth Token')
-      ? `Bearer ${localStorage.getItem('Auth Token')}`
-      : ''
-  }
-});
-const client = new ApolloClient({
-  cache,
-  link,
-  resolvers: {}
-});
-cache.writeData({
-  data: {
-    isLoggedIn: !!localStorage.getItem('Auth Token')
-  }
-});
-
+import TokenProvider from './libs/store/store';
 ReactDOM.render(
-  <ApolloProvider client={client}>
+  <TokenProvider>
     <App />
-  </ApolloProvider>,
+  </TokenProvider>,
   document.getElementById('root')
 );
 

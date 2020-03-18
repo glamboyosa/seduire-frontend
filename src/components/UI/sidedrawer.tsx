@@ -104,7 +104,7 @@ type AppProps = {
     | [];
 };
 const SideDrawerComponent = ({ closed, clicked, content }: AppProps) => {
-  console.log(content);
+  console.log('we also get back', content);
   return (
     <SideDrawer spellCheck={closed}>
       <ButtonHandler>

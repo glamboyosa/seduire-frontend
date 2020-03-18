@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from '@reach/router';
 import styled from 'styled-components';
 import Nav from '../UI/Nav';
-
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 const Div = styled.div`
   text-align: center;
   width: 100%;
@@ -48,6 +49,14 @@ const LinkContainer = styled.span`
   }
 `;
 const ProductChoice = () => {
+  const IS_LOGGED_IN = gql`
+    query IsUserLoggedIn {
+      isLoggedIn @client
+    }
+  `;
+
+  const { data: cacheData } = useQuery(IS_LOGGED_IN);
+  console.log('is user logged in', cacheData.isLoggedIn);
   return (
     <Div>
       {/*Remove Nav once you have products*/}

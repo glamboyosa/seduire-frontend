@@ -6,7 +6,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import * as Cart from '../../libs/gql/cart';
 import { FaShoppingBag } from 'react-icons/fa';
 import SideDrawer from '../UI/sidedrawer';
-import useCartCalculator from '../../libs/hooks/useCartCalculator';
+
 type AppProps = {
   cartCount: Number;
 };
@@ -14,7 +14,6 @@ const Container = styled.div`
   width: 100%;
   position: relative;
   background-color: #fff;
-  margin-top: 2rem;
   position: fixed;
   transition: all 0.1s;
   z-index: 300;
@@ -178,7 +177,7 @@ const Nav = ({ cartCount }: AppProps) => {
     GET_CART
   );
 
-  console.log(data?.getCart);
+  console.log('we get back', data?.getCart);
   console.log(loading);
   console.log(error);
   const closedHandler = () => {

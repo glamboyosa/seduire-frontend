@@ -19,6 +19,9 @@ export interface GetProducts_Products {
 export interface getProducts {
   getProducts: GetProducts_Products[];
 }
+export interface getCategory {
+  getCategory: GetProducts_Products[];
+}
 export interface getProductVariables {
   productId: string;
 }
