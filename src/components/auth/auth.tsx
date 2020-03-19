@@ -7,6 +7,7 @@ import * as SignIn from '../../libs/gql/user';
 import { Redirect } from '@reach/router';
 import Modal from '../UI/Modal';
 import Spinner from '../UI/spinner';
+import useContext from '../../libs/hooks/useContext';
 const Div = styled.div`
   text-align: center;
   position: relative;
@@ -97,6 +98,7 @@ const Auth = () => {
   const [lastName, setLastName] = useState('');
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
+  const { setTokenHandler } = useContext();
   const LOGIN_DETAILS = gql`
     query($email: String!, $password: String!) {
       login(email: $email, password: $password) {
@@ -145,6 +147,7 @@ const Auth = () => {
       setAuthPage(true);
     }
     if (loginResponse) {
+      setTokenHandler(loginResponse.login.token);
       localStorage.setItem('Auth Token', loginResponse.login.token);
       localStorage.setItem('expsIn', loginResponse.login.exp.toString());
       localStorage.setItem('expDate', loginResponse.login.expDate);
@@ -152,7 +155,7 @@ const Auth = () => {
       setIsSignedIn(true);
       setAuthPage(false);
     }
-  }, [loginResponse, signUpResponse]);
+  }, [loginResponse, signUpResponse, setTokenHandler]);
   const authHandler = (e: React.SyntheticEvent) => {
     e.preventDefault();
     authPage

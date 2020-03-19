@@ -10,6 +10,7 @@ export interface GetProducts_Products {
   type: GetProducts_ProductTypes;
   sex: string;
   size: string[];
+  creator: string;
   price: number;
   count: number;
   mediaUrl: string;
@@ -18,6 +19,9 @@ export interface GetProducts_Products {
 }
 export interface getProducts {
   getProducts: GetProducts_Products[];
+}
+export interface getProduct {
+  getProduct: GetProducts_Products;
 }
 export interface getCategory {
   getCategory: GetProducts_Products[];

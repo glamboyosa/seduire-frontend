@@ -60,8 +60,9 @@ type AppProps = {
   content?: Products.getCategory;
   loading: boolean;
   error?: ApolloError;
+  choice: any;
 };
-const ProductsComponent = ({ content, loading, error }: AppProps) => {
+const ProductsComponent = ({ content, loading, error, choice }: AppProps) => {
   if (loading && !content) {
     return <Spinner />;
   }
@@ -87,7 +88,7 @@ const ProductsComponent = ({ content, loading, error }: AppProps) => {
           >
             {el.description}
           </p>
-          <Link className="link" to={`products/${el._id}`}>
+          <Link className="link" to={`/products/${choice}/${el._id}`}>
             View Product...
           </Link>
         </Product>
