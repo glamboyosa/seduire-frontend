@@ -1,16 +1,17 @@
-import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import React, { useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import * as Products from '../../libs/gql/products';
 import * as Cart from '../../libs/gql/cart';
 import gql from 'graphql-tag';
 import Nav from '../UI/Nav';
 import useCartCalculator from '../../libs/hooks/useCartCalculator';
-import { useParams } from '@reach/router';
+import { useParams, Redirect } from '@reach/router';
+import SingleProduct from './singleProduct';
 const IndividualProductComponent = () => {
   const ID = useParams();
   const PRODUCTS = gql`
     query {
-      getProduct(sex: "${ID.id}"){
+      getProduct(productId: "${ID.id}"){
         _id
         description
         creator
@@ -39,14 +40,57 @@ const IndividualProductComponent = () => {
       }
     }
   `;
+  const IS_LOGGED_IN = gql`
+    query IsUserLoggedIn {
+      isLoggedIn @client
+    }
+  `;
+  let content;
   const { data, loading, error: productError } = useQuery<
     Products.getProduct,
     null
   >(PRODUCTS);
-  const { data: cartData, loading: cartLoading, error: cartError } = useQuery<
-    Cart.getCart,
-    null
-  >(GET_CART);
+  const { data: cartData } = useQuery<Cart.getCart, null>(GET_CART);
+  const [
+    addToCart,
+    { loading: cartLoading, data: addToCartData, error }
+  ] = useMutation<Cart.addToCart, Cart.addToCartVariables>(ADD_TO_CART);
+  const { data: cacheData } = useQuery(IS_LOGGED_IN);
+  useEffect(() => {
+    localStorage.getItem('id') &&
+      addToCart({
+        variables: {
+          item: localStorage.getItem('id')!,
+          size: localStorage.getItem('size')!
+        }
+      });
+  }, [addToCart]);
+  const addToCartHandler = (
+    id: string,
+    size: string,
+    e: React.SyntheticEvent
+  ) => {
+    e.preventDefault();
+    if (!cacheData.isLoggedIn) {
+      localStorage.setItem('size', size);
+      localStorage.setItem('id', id);
+      content = <Redirect to="/auth" noThrow />;
+    } else {
+      addToCart({ variables: { item: id, size } });
+    }
+  };
   const { cartCount } = useCartCalculator(cartData?.getCart);
+  return (
+    <div>
+      {content}
+      <Nav cartCount={cartCount} />;
+      <SingleProduct
+        loading={loading}
+        error={productError}
+        content={data}
+        cartHandler={addToCartHandler}
+      />
+    </div>
+  );
 };
 export default IndividualProductComponent;

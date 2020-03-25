@@ -87,7 +87,7 @@ const ProductsComponent = ({ content, loading, error }: AppProps) => {
           >
             {el.description}
           </p>
-          <Link className="link" to={`/products/${el._id}`}>
+          <Link className="link" to={`/product/${el._id}`}>
             View Product...
           </Link>
         </Product>

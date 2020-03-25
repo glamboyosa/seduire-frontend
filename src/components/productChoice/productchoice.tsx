@@ -49,18 +49,8 @@ const LinkContainer = styled.span`
   }
 `;
 const ProductChoice = () => {
-  const IS_LOGGED_IN = gql`
-    query IsUserLoggedIn {
-      isLoggedIn @client
-    }
-  `;
-
-  const { data: cacheData } = useQuery(IS_LOGGED_IN);
-  console.log('is user logged in', cacheData.isLoggedIn);
   return (
     <Div>
-      {/*Remove Nav once you have products*/}
-      <Nav cartCount={0} />
       <ItemComponent>
         <ItemText>Shop Men's Clothing</ItemText>
         <LinkContainer>

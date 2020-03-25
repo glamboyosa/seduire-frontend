@@ -4,6 +4,7 @@ import ProductChoice from '../pages/productchoice';
 import Auth from '../pages/auth';
 import AllProducts from '../pages/products';
 import FilteredProducts from '../pages/filteredProducts';
+import IndividualProduct from '../pages/individualProducts';
 import { Router } from '@reach/router';
 const Routes = () => (
   <Router>
@@ -11,6 +12,7 @@ const Routes = () => (
     <ProductChoice path="/productchoice" />
     <Auth path="auth" />
     <AllProducts path="products" />
+    <IndividualProduct path="product/:id" />
     <FilteredProducts path="products/:choice" />
   </Router>
 );

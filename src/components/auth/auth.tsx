@@ -158,6 +158,7 @@ const Auth = () => {
   }, [loginResponse, signUpResponse, setTokenHandler]);
   const authHandler = (e: React.SyntheticEvent) => {
     e.preventDefault();
+    !authPage && localStorage.setItem('firstName', firstName);
     authPage
       ? getUserDetails({ variables: { email, password } })
       : signUp({ variables: { firstName, lastName, email, password } });

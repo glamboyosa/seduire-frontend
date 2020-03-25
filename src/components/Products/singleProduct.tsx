@@ -1,43 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Products from '../../libs/gql/products';
 import styled from 'styled-components';
 import Spinner from '../UI/spinner';
 import Modal from '../UI/Modal';
 import { ApolloError } from 'apollo-boost';
 const Div = styled.div`
+  width: 100%;
   display: flex;
-  align-items: center;
+  height: 90vh;
+  margin-top: 5.5rem;
+  @media only screen and (max-width: 800px) {
+    & {
+      flex-wrap: wrap;
+    }
+    .img-bg {
+      width: 100% !important;
+    }
+  }
 `;
 const Title = styled.h1`
   font-size: 2.5rem;
   margin: 1rem;
 `;
-const ProductImage = styled.img`
-  width: 100%;
-`;
+
 const ProductContainer = styled.div`
   font-size: 2rem;
+  position: relative;
   text-align: center;
+  flex-grow: 1;
+  justify-content: center;
 `;
 const ProductsSizesContainer = styled.div`
   margin-top: 2rem;
   margin-bottom: 2rem;
   padding: 2rem;
+  margin-top: 8rem;
+  margin-bottom: 5rem;
   background-color: #e3e3e3;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
 `;
 const ProductsSize = styled.span`
   width: 1.5rem;
   font-size: 1rem;
   background-color: #fff;
+  cursor: pointer;
   padding: 1rem;
+  transition: all 0.3s;
+  &:active {
+    background-color: #00ca56;
+  }
+  &:not(:active) {
+    background-color: #fff;
+  }
+`;
+const ProductsSizeBanner = styled.span`
+  background-color: #e3e3e3;
+  padding: 2rem;
 `;
 const ButtonContainer = styled.div`
   position: relative;
-  width: 100%;
   display: inline-block;
-  margin-left: -20rem;
   font-family: inherit;
 `;
 const SlantedButton = styled.button`
@@ -80,8 +103,21 @@ type AppProps = {
   content?: Products.getProduct;
   loading: boolean;
   error?: ApolloError;
+  cartHandler: (id: string, size: string, e: React.SyntheticEvent) => void;
 };
-const SingleProductComponent = ({ content, loading, error }: AppProps) => {
+const SingleProductComponent = ({
+  content,
+  loading,
+  error,
+  cartHandler
+}: AppProps) => {
+  const [size, setSize] = useState<string>(null!);
+  const [id, setId] = useState<string>(null!);
+  useEffect(() => {
+    if (content) {
+      setId(content?.getProduct._id);
+    }
+  }, [content]);
   if (loading && !content) {
     return <Spinner />;
   }
@@ -91,18 +127,39 @@ const SingleProductComponent = ({ content, loading, error }: AppProps) => {
 
   return (
     <Div>
-      <ProductImage src={content?.getProduct.mediaUrl} />
+      <div
+        className="img-bg"
+        style={{
+          height: '90vh',
+          width: '45%',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundImage: `linear-gradient(to right bottom,
+            rgba(0,0,0,0.4),
+            rgba(0,0,0,0.4)),
+        url(${content?.getProduct.mediaUrl})`
+        }}
+      >
+        &nbsp;
+      </div>
+
       <ProductContainer>
         <Title>{content?.getProduct.description}</Title>
         <p>by: {content?.getProduct.creator}</p>
+        {size && <ProductsSizeBanner>{size}</ProductsSizeBanner>}
         <ProductsSizesContainer>
           {content?.getProduct.size.map(size => (
-            <ProductsSize>{size}</ProductsSize>
+            <ProductsSize onClick={e => setSize(e.currentTarget.innerText)}>
+              {size}
+            </ProductsSize>
           ))}
         </ProductsSizesContainer>
         <ButtonContainer>
-          <SlantedButton>ADD TO CART</SlantedButton>
-          <CentralButton>&nbsp;</CentralButton>
+          <SlantedButton onClick={e => cartHandler(id, size, e)}>
+            ADD TO CART
+          </SlantedButton>
+          <CentralButton>ADD TO CART</CentralButton>
         </ButtonContainer>
       </ProductContainer>
     </Div>

@@ -50,7 +50,7 @@ const Navigation = styled.nav`
   .navigation__item {
     margin-left: 1rem;
   }
-  .navigation__item--cart{
+  .navigation__item--cart {
     position: relative;
   }
   .navigation__item a {
@@ -65,14 +65,13 @@ const Navigation = styled.nav`
     left: 0;
   }
   @media only screen and (max-width: 800px) {
-      
     & {
-        visibility: ${props => (props.spellCheck ? 'visible;' : 'hidden;')}
-        top: ${props => props.spellCheck && '50%;'}
-    
-      left: ${props => props.spellCheck && '50%;'}
-      transform: ${props => props.spellCheck && 'translate(-50%, -50%);'}
-      width: ${props => props.spellCheck && '100%;'}
+      visibility: ${props => (props.spellCheck ? 'visible;' : 'hidden;')};
+      top: ${props => props.spellCheck && '50%;'};
+
+      left: ${props => props.spellCheck && '50%;'};
+      transform: ${props => props.spellCheck && 'translate(-50%, -50%);'};
+      width: ${props => props.spellCheck && '100%;'};
     }
     .navigation {
       flex-direction: ${props => props.spellCheck && 'column'};
@@ -184,16 +183,7 @@ const Nav = ({ cartCount }: AppProps) => {
     getCart();
     setIsClosed(!isClosed);
   };
-  const content = [
-    {
-      mediaUrl:
-        'https://cdn.hashnode.com/res/hashnode/image/upload/v1566283802518/_7F8SMcfX.jpeg',
-      description: 'Ire Aderinokun',
-      price: 300
-    }
-  ];
-  console.log(content);
-  console.log(cartCount);
+
   return (
     <Container spellCheck={checkedState}>
       <SideDrawer

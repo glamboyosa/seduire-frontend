@@ -66,6 +66,9 @@ const ProductsComponent = ({ content, loading, error, choice }: AppProps) => {
   if (loading && !content) {
     return <Spinner />;
   }
+  loading
+    ? console.log('Hi from inside choice products')
+    : console.log('bye from inside choice products');
   if (error) {
     return <Modal>{error.message}</Modal>;
   }
@@ -88,7 +91,7 @@ const ProductsComponent = ({ content, loading, error, choice }: AppProps) => {
           >
             {el.description}
           </p>
-          <Link className="link" to={`/products/${choice}/${el._id}`}>
+          <Link className="link" to={`/product/${el._id}`}>
             View Product...
           </Link>
         </Product>
