@@ -57,7 +57,9 @@ const IndividualProductComponent = () => {
   ] = useMutation<Cart.addToCart, Cart.addToCartVariables>(ADD_TO_CART);
   const { data: cacheData } = useQuery(IS_LOGGED_IN);
   useEffect(() => {
+    //missing isLoggedIn depedency
     localStorage.getItem('id') &&
+      localStorage.getItem('size') &&
       addToCart({
         variables: {
           item: localStorage.getItem('id')!,
@@ -71,9 +73,11 @@ const IndividualProductComponent = () => {
     e: React.SyntheticEvent
   ) => {
     e.preventDefault();
+    console.log('hi from in here');
     if (!cacheData.isLoggedIn) {
       localStorage.setItem('size', size);
       localStorage.setItem('id', id);
+      //maybe return here
       content = <Redirect to="/auth" noThrow />;
     } else {
       addToCart({ variables: { item: id, size } });

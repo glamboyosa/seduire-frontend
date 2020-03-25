@@ -57,6 +57,7 @@ const ProductsSize = styled.span`
 const ProductsSizeBanner = styled.span`
   background-color: #e3e3e3;
   padding: 2rem;
+  width: 70%;
 `;
 const ButtonContainer = styled.div`
   position: relative;
@@ -66,6 +67,7 @@ const ButtonContainer = styled.div`
 const SlantedButton = styled.button`
   padding: 1rem 3rem;
   color: #000;
+  cursor: pointer;
   text-transform: uppercase;
   display: inline-block;
   font-size: 1.5rem;
