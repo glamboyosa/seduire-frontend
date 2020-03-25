@@ -69,7 +69,6 @@ const IndividualProductComponent = () => {
     if (!cacheData.isLoggedIn) {
       localStorage.setItem('size', size);
       localStorage.setItem('id', id);
-      //maybe return here
       setisAuth(true);
     } else {
       addToCart({ variables: { item: id, size } });
@@ -84,6 +83,7 @@ const IndividualProductComponent = () => {
       {content}
       <Nav cartCount={cartCount} />;
       <SingleProduct
+        cartData={addToCartData}
         loading={loading}
         error={productError}
         content={data}

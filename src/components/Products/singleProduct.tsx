@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as Products from '../../libs/gql/products';
+import * as Cart from '../../libs/gql/cart';
 import styled from 'styled-components';
 import Spinner from '../UI/spinner';
 import Modal from '../UI/Modal';
@@ -106,6 +107,7 @@ const CentralButton = styled.button`
 type AppProps = {
   content?: Products.getProduct;
   loading: boolean;
+  cartData?: Cart.addToCart;
   error?: ApolloError;
   cartHandler: (id: string, size: string, e: React.SyntheticEvent) => void;
 };
@@ -113,7 +115,8 @@ const SingleProductComponent = ({
   content,
   loading,
   error,
-  cartHandler
+  cartHandler,
+  cartData
 }: AppProps) => {
   const [size, setSize] = useState<string>(null!);
   const [id, setId] = useState<string>(null!);
@@ -160,9 +163,15 @@ const SingleProductComponent = ({
           ))}
         </ProductsSizesContainer>
         <ButtonContainer>
-          <SlantedButton onClick={e => cartHandler(id, size, e)}>
-            ADD TO CART
-          </SlantedButton>
+          {!cartData ? (
+            <SlantedButton onClick={e => cartHandler(id, size, e)}>
+              ADD TO CART
+            </SlantedButton>
+          ) : (
+            <SlantedButton onClick={e => cartHandler(id, size, e)}>
+              ADDED TO CART
+            </SlantedButton>
+          )}
           <CentralButton>ADD TO CART</CentralButton>
         </ButtonContainer>
       </ProductContainer>
