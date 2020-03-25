@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from '@reach/router';
 import styled from 'styled-components';
-import Nav from '../UI/Nav';
+import * as Cart from '../../libs/gql/cart';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import { useMutation } from 'react-apollo';
 const Div = styled.div`
   text-align: center;
   width: 100%;
@@ -49,6 +50,35 @@ const LinkContainer = styled.span`
   }
 `;
 const ProductChoice = () => {
+  const ADD_TO_CART = gql`
+    mutation($item: String!, $size: String!) {
+      addToCart(item: $item, size: $size) {
+        _id
+        description
+      }
+    }
+  `;
+  const IS_LOGGED_IN = gql`
+    query IsUserLoggedIn {
+      isLoggedIn @client
+    }
+  `;
+  const [
+    addToCart,
+    { loading: cartLoading, data: addToCartData, error }
+  ] = useMutation<Cart.addToCart, Cart.addToCartVariables>(ADD_TO_CART);
+  const { data: cacheData } = useQuery(IS_LOGGED_IN);
+  useEffect(() => {
+    localStorage.getItem('id') &&
+      localStorage.getItem('size') &&
+      cacheData.isLoggedIn &&
+      addToCart({
+        variables: {
+          item: localStorage.getItem('id')!,
+          size: localStorage.getItem('size')!
+        }
+      });
+  }, [addToCart, cacheData]);
   return (
     <Div>
       <ItemComponent>

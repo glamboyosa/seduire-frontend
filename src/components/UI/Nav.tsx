@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 import gql from 'graphql-tag';
 import { useLazyQuery } from '@apollo/react-hooks';
 import * as Cart from '../../libs/gql/cart';
 import { FaShoppingBag } from 'react-icons/fa';
 import SideDrawer from '../UI/sidedrawer';
+import { useQuery } from 'react-apollo';
 
 type AppProps = {
   cartCount: Number;
@@ -170,27 +171,33 @@ const Nav = ({ cartCount }: AppProps) => {
       }
     }
   `;
+  const IS_LOGGED_IN = gql`
+    query IsUserLoggedIn {
+      isLoggedIn @client
+    }
+  `;
   const [checkedState, setCheckedState] = useState(false);
   const [isClosed, setIsClosed] = useState(true);
   const [getCart, { data, loading, error }] = useLazyQuery<Cart.getCart, null>(
     GET_CART
   );
-
-  console.log('we get back', data?.getCart);
+  const { data: cacheData } = useQuery(IS_LOGGED_IN);
   console.log(loading);
   console.log(error);
   const closedHandler = () => {
     getCart();
     setIsClosed(!isClosed);
   };
-
+  const logoutHandler = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    localStorage.removeItem('Auth Token');
+    localStorage.removeItem('expsIn');
+    localStorage.removeItem('expDate');
+    navigate('/');
+  };
   return (
     <Container spellCheck={checkedState}>
-      <SideDrawer
-        clicked={closedHandler}
-        closed={isClosed}
-        content={[] ?? data?.getCart}
-      />
+      <SideDrawer clicked={closedHandler} closed={isClosed} content={data} />
       <Logo>
         <Link className="span" to="/">
           <span className="span">Seduire</span>
@@ -205,8 +212,19 @@ const Nav = ({ cartCount }: AppProps) => {
       {/*Using spellcheck bc that's the only T or F element and TS throws bc there exists no 'checkedState' prop*/}
       <Navigation spellCheck={checkedState}>
         <ul className="navigation">
+          {cacheData.isLoggedIn && (
+            <li className="navigation__item">
+              <span style={{ cursor: 'pointer' }} onClick={logoutHandler}>
+                Logout
+              </span>
+            </li>
+          )}
           <li className="navigation__item">
-            <Link to="/auth">Log In/Sign Up</Link>
+            <Link to="/auth">
+              {cacheData.isLoggedIn
+                ? `hi, ${localStorage.getItem('firstName') ?? ''}`
+                : 'Log In/Sign Up'}
+            </Link>
           </li>
           <li className="navigation__item">
             <div className="navigation__item--cart">

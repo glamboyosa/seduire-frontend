@@ -5,6 +5,7 @@ const useCartCalculator = (
     mediaUrl: string;
     price: number;
     description: string;
+    count: number;
   }[]
 ) => {
   const [cartCount, setCartCount] = useState(0);
@@ -13,7 +14,7 @@ const useCartCalculator = (
     if (typeof content !== 'undefined') {
       console.log("Ain't undefined");
       const cartCount = content
-        .map(cartItem => cartItem.price)
+        .map(cartItem => cartItem.count)
         .reduce((count, el) => {
           return count + el;
         }, 0);

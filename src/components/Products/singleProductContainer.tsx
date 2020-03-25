@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import * as Products from '../../libs/gql/products';
 import * as Cart from '../../libs/gql/cart';
@@ -18,6 +18,7 @@ const IndividualProductComponent = () => {
         price
         size
         mediaUrl
+        count
       }
     }
   `;
@@ -29,6 +30,7 @@ const IndividualProductComponent = () => {
         description
         price
         mediaUrl
+        count
       }
     }
   `;
@@ -56,34 +58,27 @@ const IndividualProductComponent = () => {
     { loading: cartLoading, data: addToCartData, error }
   ] = useMutation<Cart.addToCart, Cart.addToCartVariables>(ADD_TO_CART);
   const { data: cacheData } = useQuery(IS_LOGGED_IN);
-  useEffect(() => {
-    //missing isLoggedIn depedency
-    localStorage.getItem('id') &&
-      localStorage.getItem('size') &&
-      addToCart({
-        variables: {
-          item: localStorage.getItem('id')!,
-          size: localStorage.getItem('size')!
-        }
-      });
-  }, [addToCart]);
+  const [isAuth, setisAuth] = useState(false);
+
   const addToCartHandler = (
     id: string,
     size: string,
     e: React.SyntheticEvent
   ) => {
     e.preventDefault();
-    console.log('hi from in here');
     if (!cacheData.isLoggedIn) {
       localStorage.setItem('size', size);
       localStorage.setItem('id', id);
       //maybe return here
-      content = <Redirect to="/auth" noThrow />;
+      setisAuth(true);
     } else {
       addToCart({ variables: { item: id, size } });
     }
   };
   const { cartCount } = useCartCalculator(cartData?.getCart);
+  if (isAuth) {
+    content = <Redirect to="/auth" noThrow />;
+  }
   return (
     <div>
       {content}

@@ -55,9 +55,11 @@ const ProductsSize = styled.span`
   }
 `;
 const ProductsSizeBanner = styled.span`
+  display: block;
+  margin-top: 5rem;
   background-color: #e3e3e3;
   padding: 2rem;
-  width: 70%;
+  width: 100%;
 `;
 const ButtonContainer = styled.div`
   position: relative;

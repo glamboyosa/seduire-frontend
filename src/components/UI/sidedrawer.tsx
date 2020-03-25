@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import emptyCart from '../../resources/images/undraw_online_shopping_ga73.png';
+import * as Cart from '../../libs/gql/cart';
 const SideDrawer = styled.div`
   position: fixed;
   width: 25rem;
@@ -95,23 +96,18 @@ const Empty = styled.span`
 type AppProps = {
   closed: boolean;
   clicked: () => void;
-  content:
-    | {
-        mediaUrl: string;
-        price: number;
-        description: string;
-      }[]
-    | [];
+  content?: Cart.getCart;
 };
 const SideDrawerComponent = ({ closed, clicked, content }: AppProps) => {
-  console.log('we also get back', content);
+  console.log('we also get back', content?.getCart);
+
   return (
     <SideDrawer spellCheck={closed}>
       <ButtonHandler>
         <Button onClick={clicked} />
       </ButtonHandler>
-      {content.length !== 0 ? (
-        content!.slice(0, 3).map(el => {
+      {content?.getCart && content.getCart.length !== 0 ? (
+        content?.getCart.slice(0, 3).map(el => {
           return (
             <CartItemContainer>
               <CartItem>
@@ -137,7 +133,7 @@ const SideDrawerComponent = ({ closed, clicked, content }: AppProps) => {
           }}
         />
       )}
-      {content.length !== 0 ? (
+      {content?.getCart && content?.getCart.length !== 0 ? (
         <span>view rest of cart...</span>
       ) : (
         // <Link href="/cart">View rest of cart...</Link>
