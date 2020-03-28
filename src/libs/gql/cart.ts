@@ -11,6 +11,7 @@ export interface GetCartProducts_Products {
   sex: string;
   size: string[];
   price: number;
+  creator: string;
   count: number;
   mediaUrl: string;
   createdAt: string;

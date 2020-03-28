@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import emptyCart from '../../resources/images/undraw_online_shopping_ga73.png';
 import * as Cart from '../../libs/gql/cart';
+import { Link } from '@reach/router';
 const SideDrawer = styled.div`
   position: fixed;
   width: 25rem;
@@ -134,9 +135,8 @@ const SideDrawerComponent = ({ closed, clicked, content }: AppProps) => {
         />
       )}
       {content?.getCart && content?.getCart.length !== 0 ? (
-        <span>view rest of cart...</span>
+        <Link to="/cart">View rest of cart...</Link>
       ) : (
-        // <Link href="/cart">View rest of cart...</Link>
         <Empty>Cart is empty. Start shopping now.</Empty>
       )}
     </SideDrawer>

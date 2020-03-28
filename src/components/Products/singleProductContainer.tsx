@@ -75,6 +75,7 @@ const IndividualProductComponent = () => {
     }
   };
   const { cartCount } = useCartCalculator(cartData?.getCart);
+  console.log(error?.message);
   if (isAuth) {
     content = <Redirect to="/auth" noThrow />;
   }

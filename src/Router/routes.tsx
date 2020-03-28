@@ -5,6 +5,7 @@ import Auth from '../pages/auth';
 import AllProducts from '../pages/products';
 import FilteredProducts from '../pages/filteredProducts';
 import IndividualProduct from '../pages/individualProducts';
+import Cart from '../pages/cart';
 import { Router } from '@reach/router';
 const Routes = () => (
   <Router>
@@ -14,6 +15,7 @@ const Routes = () => (
     <AllProducts path="products" />
     <IndividualProduct path="product/:id" />
     <FilteredProducts path="products/:choice" />
+    <Cart path="cart" />
   </Router>
 );
 export default Routes;
