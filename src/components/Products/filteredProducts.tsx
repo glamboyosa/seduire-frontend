@@ -31,6 +31,7 @@ const All = () => {
         description
         price
         mediaUrl
+        count
       }
     }
   `;

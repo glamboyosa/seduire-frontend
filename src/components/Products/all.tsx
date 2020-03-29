@@ -26,6 +26,7 @@ const All = () => {
         description
         price
         mediaUrl
+        count
       }
     }
   `;
@@ -50,7 +51,6 @@ const All = () => {
   return (
     <div>
       <Nav cartCount={cartCount} />;
-      {/* do not forget to pass down data, loading and product error*/}
       <ProductsComponent
         content={data}
         loading={loading}

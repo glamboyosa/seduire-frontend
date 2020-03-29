@@ -3,8 +3,12 @@ import Routes from './Router/routes';
 import useContextHandler from './libs/hooks/useContext';
 import { InMemoryCache, HttpLink, ApolloClient } from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+const stripePromise = loadStripe(process.env.REACT_APP_stripePublishableKey!);
 function App() {
   const { token, setTokenHandler } = useContextHandler();
+
   const removeToken = () => {
     setTokenHandler(null);
     localStorage.removeItem('Auth Token');
@@ -45,9 +49,11 @@ function App() {
     }
   });
   return (
-    <ApolloProvider client={client}>
-      <Routes />
-    </ApolloProvider>
+    <Elements stripe={stripePromise}>
+      <ApolloProvider client={client}>
+        <Routes />
+      </ApolloProvider>
+    </Elements>
   );
 }
 

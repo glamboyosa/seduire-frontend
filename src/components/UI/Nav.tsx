@@ -8,7 +8,6 @@ import { FaShoppingBag } from 'react-icons/fa';
 import SideDrawer from '../UI/sidedrawer';
 import { useQuery } from 'react-apollo';
 import useContextHandler from '../../libs/hooks/useContext';
-const { setTokenHandler } = useContextHandler();
 type AppProps = {
   cartCount: Number;
 };
@@ -152,6 +151,7 @@ const CartCount = styled.figure`
   clip-path: circle(50% at 50% 50%);
   background-color: #fff;
   position: absolute;
+  margin-top: 0.2rem;
   top: -1.5rem;
   right: -3rem;
   color: #000;
@@ -179,6 +179,7 @@ const Nav = ({ cartCount }: AppProps) => {
   `;
   const [checkedState, setCheckedState] = useState(false);
   const [isClosed, setIsClosed] = useState(true);
+  const { setTokenHandler } = useContextHandler();
   const [getCart, { data, loading, error }] = useLazyQuery<Cart.getCart, null>(
     GET_CART
   );

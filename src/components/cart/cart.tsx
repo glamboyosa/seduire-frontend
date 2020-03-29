@@ -1,15 +1,23 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import * as Cart from '../../libs/gql/cart';
 import styled from 'styled-components';
 import { ApolloError } from 'apollo-boost';
 import Spinner from '../UI/spinner';
 import Modal from '../UI/Modal';
 type AppProps = {
-  content?: Cart.getCart;
+  content?: {
+    _id: string;
+    mediaUrl: string;
+    price: number;
+    description: string;
+    count: number;
+    creator: string;
+  }[];
   loading: boolean;
   error?: ApolloError;
-  incrementHandler: (id: string) => void;
+  incrementHandler: (id: string, count: number) => void;
   decrementHandler: (id: string) => void;
+  getStripeSecretHandler: () => void;
 };
 const Div = styled.div`
   padding-top: 7rem;
@@ -43,7 +51,13 @@ const CartItemDescriptionContainer = styled.div`
   position: absolute;
   top: 0;
   left: 5rem;
-  flex-direction: column; /* probably gonna replace you with flex-direction*/
+  flex-direction: column;
+  @media only screen and (max-width: 500px) {
+    & {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
 `;
 const CartItemDescriptionBig = styled.span`
   font-size: 1rem;
@@ -70,6 +84,11 @@ const CartItemCount = styled.span`
 const CartItemPrice = styled.div`
   position: relative;
   font-size: 2rem;
+  @media only screen and (max-width: 800px) {
+    & {
+      font-size: 1rem;
+    }
+  }
 `;
 const CartItemButton = styled.label`
   position: relative;
@@ -98,25 +117,81 @@ const CartItemButton = styled.label`
     transform: rotate(-135deg);
   }
 `;
+const ButtonContainer = styled.div`
+  position: relative;
+  display: inline-block;
+  font-family: inherit;
+`;
+const SlantedButton = styled.button`
+  padding: 1rem 3rem;
+  color: #000;
+  cursor: pointer;
+  text-transform: uppercase;
+  display: inline-block;
+  font-size: 1.5rem;
+  font-family: inherit;
+  background-color: #fff;
+  border: 1px solid #fff;
+  position: absolute;
+  z-index: 3;
+  top: -1rem;
+  left: 1.2rem;
+  white-space: nowrap;
+  transition: all 0.5s;
+  &:hover {
+    transform: translateY(17rem);
+    transform: translateX(-3px);
+    top: -0.5rem;
+  }
+  & > * {
+    color: #000;
+    text-decoration: none;
+    font-size: inherit;
+  }
+  @media only screen and (max-width: 500px) {
+    & {
+      font-size: 1rem;
+    }
+  }
+`;
+const CentralButton = styled.button`
+  padding: 1rem 3rem;
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 1.5rem;
+  background-color: #000;
+  border: 1px solid #000;
+  position: absolute;
+  transition: all 0.5s;
+  @media only screen and (max-width: 500px) {
+    & {
+      font-size: 1rem;
+    }
+  }
+`;
 const CartComponent = memo(
   ({
     content,
     error,
     loading,
     incrementHandler,
-    decrementHandler
+    decrementHandler,
+    getStripeSecretHandler
   }: AppProps) => {
     if (loading && !content) {
       console.log('do i render loading twice in cart.tsx?');
-      return <div>Hey i'm loading</div>;
+      return <Spinner />;
     }
+    // useEffect(() => {
+    //   console.log(content?.getCart);
+    // }, [content]);
     if (error) {
       return <Modal>{error.message}</Modal>;
     }
     return (
       <Div>
         <Title>Shopping Cart</Title>
-        {content?.getCart.map(item => {
+        {content?.map(item => {
           return (
             <CartContainer>
               <CartItemImageContainer>
@@ -135,7 +210,9 @@ const CartComponent = memo(
                   -
                 </CartItemCountButton>
                 <CartItemCount>{item.count}</CartItemCount>
-                <CartItemCountButton onClick={() => incrementHandler(item._id)}>
+                <CartItemCountButton
+                  onClick={() => incrementHandler(item._id, item.count)}
+                >
                   +
                 </CartItemCountButton>
               </CartItemCountContainer>
@@ -144,6 +221,14 @@ const CartComponent = memo(
             </CartContainer>
           );
         })}
+        <div style={{ textAlign: 'center' }}>
+          <ButtonContainer>
+            <SlantedButton onClick={getStripeSecretHandler}>
+              Proceed to checkout
+            </SlantedButton>
+            <CentralButton>Proceed to checkout</CentralButton>
+          </ButtonContainer>
+        </div>
       </Div>
     );
   }

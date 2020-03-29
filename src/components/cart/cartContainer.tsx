@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import gql from 'graphql-tag';
 import * as Cart from '../../libs/gql/cart';
 import * as Stripe from '../../libs/gql/stripe';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import CartComponent from './cart';
-import Nav from '../UI/Nav';
-import useCartCalculator from '../../libs/hooks/useCartCalculator';
 import useTransformCart from '../../libs/hooks/useTransformCart';
+import useContext from '../../libs/hooks/useContext';
+import { Redirect } from '@reach/router';
 const CartContainer = () => {
   const GET_CART = gql`
     query {
@@ -33,7 +33,7 @@ const CartContainer = () => {
       }
     }
   `;
-
+  let content;
   const { data: cartData, loading, error } = useQuery<Cart.getCart, null>(
     GET_CART
   );
@@ -46,39 +46,64 @@ const CartContainer = () => {
       error: transactionError
     }
   ] = useMutation<Stripe.StripeTrx_Trx, Stripe.StripeTrxVariables>(PROCESS_TRX);
-  const [newUserCart, setNewUserCart] = useState<
-    { mediaUrl: string; price: number; description: string; count: number }[]
-  >();
-  const { priceArray } = useTransformCart(newUserCart);
-  const { cartCount } = useCartCalculator(cartData?.getCart);
-  const [cart, setCart] = useState<Cart.getCart>(null!);
+  const { setStripeHandler } = useContext();
+  const [cart, setCart] = useState<
+    {
+      _id: string;
+      mediaUrl: string;
+      price: number;
+      description: string;
+      count: number;
+      creator: string;
+    }[]
+  >(null!);
+  const { priceArray } = useTransformCart(cart);
   const [currency] = useState('NGN');
-  const incrementHandler = (id: string) => {
-    const newCart = [...cart.getCart];
+  const incrementHandler = (id: string, count: number) => {
+    console.log('count is', count);
+    const newCart = [...cart];
     const index = newCart.findIndex(el => el._id === id);
     // have to mutably update state
-    cart.getCart[index].count = cart.getCart[index].count + 1;
+    console.log(cart[index].count, cart[index].price);
+    console.log(
+      newCart[index].count + 1,
+      newCart[index].price * (newCart[index].count + 1)
+    );
     newCart[index].count = newCart[index].count + 1;
     newCart[index].price = newCart[index].price * newCart[index].count;
-    setNewUserCart(newCart);
+    setCart(newCart);
   };
   const decrementHandler = (id: string) => {
-    const newCart = [...cart.getCart];
+    const newCart = [...cart];
     const index = newCart.findIndex(el => el._id === id);
     // have to mutably update state
-    cart.getCart[index].count = cart.getCart[index].count - 1;
-    newCart[index].count = newCart[index].count + 1;
+    newCart[index].count = newCart[index].count - 1;
     newCart[index].price = newCart[index].price * newCart[index].count;
-    setNewUserCart(newCart);
+    setCart(newCart);
   };
-  if (!loading && cartData) {
-    setCart(cartData);
+  const getStripeSecretHandler = () => {
+    getStripeSecret({ variables: { amount: priceArray!, currency } });
+  };
+  useEffect(() => {
+    if (cartData) {
+      setCart(cartData.getCart);
+    }
+  }, [cartData]);
+  useEffect(() => {
+    transactionData &&
+      setStripeHandler(
+        transactionData.processTransaction.clientSecret,
+        transactionData.processTransaction.publishableKey
+      );
+  }, [transactionData, setStripeHandler]);
+  if (transactionData) {
+    content = <Redirect to="/checkout" noThrow />;
   }
-  console.log('user is authenticated in cartContainer?', cacheData.isLoggedIn);
   return cacheData.isLoggedIn ? (
     <div>
-      <Nav cartCount={cartCount} />
+      {content}
       <CartComponent
+        getStripeSecretHandler={getStripeSecretHandler}
         incrementHandler={incrementHandler}
         decrementHandler={decrementHandler}
         content={cart}
@@ -87,7 +112,7 @@ const CartContainer = () => {
       />
     </div>
   ) : (
-    <div> you aren't logged in</div>
+    <Redirect to="/auth" noThrow />
   );
 };
 export default CartContainer;
