@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import * as Cart from '../../libs/gql/cart';
 import styled from 'styled-components';
 import { ApolloError } from 'apollo-boost';
@@ -8,6 +8,8 @@ type AppProps = {
   content?: Cart.getCart;
   loading: boolean;
   error?: ApolloError;
+  incrementHandler: (id: string) => void;
+  decrementHandler: (id: string) => void;
 };
 const Div = styled.div`
   padding-top: 7rem;
@@ -96,41 +98,54 @@ const CartItemButton = styled.label`
     transform: rotate(-135deg);
   }
 `;
-const CartComponent = ({ content, error, loading }: AppProps) => {
-  if (loading && !content) {
-    return <Spinner />;
+const CartComponent = memo(
+  ({
+    content,
+    error,
+    loading,
+    incrementHandler,
+    decrementHandler
+  }: AppProps) => {
+    if (loading && !content) {
+      console.log('do i render loading twice in cart.tsx?');
+      return <div>Hey i'm loading</div>;
+    }
+    if (error) {
+      return <Modal>{error.message}</Modal>;
+    }
+    return (
+      <Div>
+        <Title>Shopping Cart</Title>
+        {content?.getCart.map(item => {
+          return (
+            <CartContainer>
+              <CartItemImageContainer>
+                <CartItemImage src={item.mediaUrl} />
+              </CartItemImageContainer>
+              <CartItemDescriptionContainer>
+                <CartItemDescriptionBig>
+                  {item.description}
+                </CartItemDescriptionBig>
+                <CartItemDescriptionSmall>
+                  by {item.creator}
+                </CartItemDescriptionSmall>
+              </CartItemDescriptionContainer>
+              <CartItemCountContainer>
+                <CartItemCountButton onClick={() => decrementHandler(item._id)}>
+                  -
+                </CartItemCountButton>
+                <CartItemCount>{item.count}</CartItemCount>
+                <CartItemCountButton onClick={() => incrementHandler(item._id)}>
+                  +
+                </CartItemCountButton>
+              </CartItemCountContainer>
+              <CartItemPrice>&#8358;{item.price}</CartItemPrice>
+              <CartItemButton />
+            </CartContainer>
+          );
+        })}
+      </Div>
+    );
   }
-  if (error) {
-    return <Modal>{error.message}</Modal>;
-  }
-  return (
-    <Div>
-      <Title>Shopping Cart</Title>
-      {content?.getCart.map(item => {
-        return (
-          <CartContainer>
-            <CartItemImageContainer>
-              <CartItemImage src={item.mediaUrl} />
-            </CartItemImageContainer>
-            <CartItemDescriptionContainer>
-              <CartItemDescriptionBig>
-                {item.description}
-              </CartItemDescriptionBig>
-              <CartItemDescriptionSmall>
-                by {item.creator}
-              </CartItemDescriptionSmall>
-            </CartItemDescriptionContainer>
-            <CartItemCountContainer>
-              <CartItemCountButton>-</CartItemCountButton>
-              <CartItemCount>{item.count}</CartItemCount>
-              <CartItemCountButton>+</CartItemCountButton>
-            </CartItemCountContainer>
-            <CartItemPrice>&#8358;{item.price}</CartItemPrice>
-            <CartItemButton />
-          </CartContainer>
-        );
-      })}
-    </Div>
-  );
-};
+);
 export default CartComponent;

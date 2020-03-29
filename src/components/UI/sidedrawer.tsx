@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled, { css } from 'styled-components';
 import emptyCart from '../../resources/images/undraw_online_shopping_ga73.png';
 import * as Cart from '../../libs/gql/cart';
@@ -99,7 +99,7 @@ type AppProps = {
   clicked: () => void;
   content?: Cart.getCart;
 };
-const SideDrawerComponent = ({ closed, clicked, content }: AppProps) => {
+const SideDrawerComponent = memo(({ closed, clicked, content }: AppProps) => {
   console.log('we also get back', content?.getCart);
 
   return (
@@ -141,5 +141,5 @@ const SideDrawerComponent = ({ closed, clicked, content }: AppProps) => {
       )}
     </SideDrawer>
   );
-};
+});
 export default SideDrawerComponent;

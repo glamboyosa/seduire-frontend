@@ -3,14 +3,14 @@ type AppProps = {
   children?: any;
 };
 interface ContextProps {
-  token: string | undefined;
-  setTokenHandler: (token: string | undefined) => void;
+  token: string | null;
+  setTokenHandler: (token: string | null) => void;
 }
 export const context = createContext({} as ContextProps);
 
 const TokenContextProvider = ({ children }: AppProps) => {
-  const [token, setToken] = useState<string | undefined>('');
-  const setTokenHandler = (token: string | undefined) => {
+  const [token, setToken] = useState<string | null>('');
+  const setTokenHandler = (token: string | null) => {
     setToken(token);
   };
   return (

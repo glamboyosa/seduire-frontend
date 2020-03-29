@@ -7,7 +7,8 @@ import * as Cart from '../../libs/gql/cart';
 import { FaShoppingBag } from 'react-icons/fa';
 import SideDrawer from '../UI/sidedrawer';
 import { useQuery } from 'react-apollo';
-
+import useContextHandler from '../../libs/hooks/useContext';
+const { setTokenHandler } = useContextHandler();
 type AppProps = {
   cartCount: Number;
 };
@@ -190,6 +191,7 @@ const Nav = ({ cartCount }: AppProps) => {
   };
   const logoutHandler = (e: React.SyntheticEvent) => {
     e.preventDefault();
+    setTokenHandler(null);
     localStorage.removeItem('Auth Token');
     localStorage.removeItem('expsIn');
     localStorage.removeItem('expDate');

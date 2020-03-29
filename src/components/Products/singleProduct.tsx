@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import * as Products from '../../libs/gql/products';
 import * as Cart from '../../libs/gql/cart';
 import styled from 'styled-components';
@@ -111,71 +111,67 @@ type AppProps = {
   error?: ApolloError;
   cartHandler: (id: string, size: string, e: React.SyntheticEvent) => void;
 };
-const SingleProductComponent = ({
-  content,
-  loading,
-  error,
-  cartHandler,
-  cartData
-}: AppProps) => {
-  const [size, setSize] = useState<string>(null!);
-  const [id, setId] = useState<string>(null!);
-  useEffect(() => {
-    if (content) {
-      setId(content?.getProduct._id);
+const SingleProductComponent = memo(
+  ({ content, loading, error, cartHandler, cartData }: AppProps) => {
+    const [size, setSize] = useState<string>(null!);
+    const [id, setId] = useState<string>(null!);
+    useEffect(() => {
+      if (content) {
+        setId(content?.getProduct._id);
+      }
+    }, [content]);
+    if (loading && !content) {
+      return <Spinner />;
     }
-  }, [content]);
-  if (loading && !content) {
-    return <Spinner />;
-  }
-  if (error) {
-    return <Modal>{error.message}</Modal>;
-  }
+    if (error) {
+      return <Modal>{error.message}</Modal>;
+    }
 
-  return (
-    <Div>
-      <div
-        className="img-bg"
-        style={{
-          height: '90vh',
-          width: '45%',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundImage: `linear-gradient(to right bottom,
+    return (
+      <Div>
+        <div
+          className="img-bg"
+          style={{
+            height: '90vh',
+            width: '45%',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundImage: `linear-gradient(to right bottom,
             rgba(0,0,0,0.4),
             rgba(0,0,0,0.4)),
         url(${content?.getProduct.mediaUrl})`
-        }}
-      >
-        &nbsp;
-      </div>
+          }}
+        >
+          &nbsp;
+        </div>
 
-      <ProductContainer>
-        <Title>{content?.getProduct.description}</Title>
-        <p>by: {content?.getProduct.creator}</p>
-        {size && <ProductsSizeBanner>{size}</ProductsSizeBanner>}
-        <ProductsSizesContainer>
-          {content?.getProduct.size.map(size => (
-            <ProductsSize onClick={e => setSize(e.currentTarget.innerText)}>
-              {size}
-            </ProductsSize>
-          ))}
-        </ProductsSizesContainer>
-        <ButtonContainer>
-          {!cartData ? (
-            <SlantedButton onClick={e => cartHandler(id, size, e)}>
-              ADD TO CART
-            </SlantedButton>
-          ) : (
-            <SlantedButton onClick={e => cartHandler(id, size, e)}>
-              ADDED TO CART
-            </SlantedButton>
-          )}
-          <CentralButton>ADD TO CART</CentralButton>
-        </ButtonContainer>
-      </ProductContainer>
-    </Div>
-  );
-};
+        <ProductContainer>
+          <Title>{content?.getProduct.description}</Title>
+          <p>by: {content?.getProduct.creator}</p>
+          {size && <ProductsSizeBanner>{size}</ProductsSizeBanner>}
+          <ProductsSizesContainer>
+            {content?.getProduct.size.map(size => (
+              <ProductsSize onClick={e => setSize(e.currentTarget.innerText)}>
+                {size}
+              </ProductsSize>
+            ))}
+          </ProductsSizesContainer>
+          <ButtonContainer>
+            {!cartData ? (
+              <SlantedButton onClick={e => cartHandler(id, size, e)}>
+                ADD TO CART
+              </SlantedButton>
+            ) : (
+              <SlantedButton onClick={e => cartHandler(id, size, e)}>
+                ADDED TO CART
+              </SlantedButton>
+            )}
+            <CentralButton>ADD TO CART</CentralButton>
+          </ButtonContainer>
+        </ProductContainer>
+      </Div>
+    );
+  }
+);
 export default SingleProductComponent;

@@ -19,6 +19,8 @@ const useCartCalculator = (
           return count + el;
         }, 0);
       setCartCount(cartCount);
+    } else {
+      setCartCount(0);
     }
   }, [content]);
 

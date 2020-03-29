@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import * as Products from '../../libs/gql/products';
 import styled from 'styled-components';
 import Spinner from '../UI/spinner';
@@ -62,39 +62,41 @@ type AppProps = {
   error?: ApolloError;
   choice: any;
 };
-const ProductsComponent = ({ content, loading, error, choice }: AppProps) => {
-  if (loading && !content) {
-    return <Spinner />;
-  }
+const ProductsComponent = memo(
+  ({ content, loading, error, choice }: AppProps) => {
+    if (loading && !content) {
+      return <Spinner />;
+    }
 
-  if (error) {
-    return <Modal>{error.message}</Modal>;
+    if (error) {
+      return <Modal>{error.message}</Modal>;
+    }
+    return (
+      <Div>
+        {content?.getCategory?.map(el => (
+          <Product key={el._id}>
+            <ImageContainer>
+              <Image src={el.mediaUrl} />
+              <PriceContainer>
+                <Price>{el.price}</Price>
+              </PriceContainer>
+            </ImageContainer>
+            <p
+              style={{
+                fontSize: '1.5rem',
+                display: 'block',
+                textAlign: 'center'
+              }}
+            >
+              {el.description}
+            </p>
+            <Link className="link" to={`/product/${el._id}`}>
+              View Product...
+            </Link>
+          </Product>
+        ))}
+      </Div>
+    );
   }
-  return (
-    <Div>
-      {content?.getCategory?.map(el => (
-        <Product key={el._id}>
-          <ImageContainer>
-            <Image src={el.mediaUrl} />
-            <PriceContainer>
-              <Price>{el.price}</Price>
-            </PriceContainer>
-          </ImageContainer>
-          <p
-            style={{
-              fontSize: '1.5rem',
-              display: 'block',
-              textAlign: 'center'
-            }}
-          >
-            {el.description}
-          </p>
-          <Link className="link" to={`/product/${el._id}`}>
-            View Product...
-          </Link>
-        </Product>
-      ))}
-    </Div>
-  );
-};
+);
 export default ProductsComponent;

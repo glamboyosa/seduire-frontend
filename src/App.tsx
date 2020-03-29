@@ -6,6 +6,7 @@ import { ApolloProvider } from 'react-apollo';
 function App() {
   const { token, setTokenHandler } = useContextHandler();
   const removeToken = () => {
+    setTokenHandler(null);
     localStorage.removeItem('Auth Token');
     localStorage.removeItem('expsIn');
     localStorage.removeItem('expDate');
