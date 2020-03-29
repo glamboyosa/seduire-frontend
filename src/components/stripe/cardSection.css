@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Spartan&display=swap');
+
 .StripeElement {
+    margin-top: 2rem;
     height: 40px;
     padding: 10px 12px;
     width: 100%;
@@ -6,7 +9,7 @@
     background-color: white;
     border: 1px solid transparent;
     border-radius: 4px;
-
+    font-family: 'Spartan', sans-serif !important;
     box-shadow: 0 1px 3px 0 #e6ebf1;
     -webkit-transition: box-shadow 150ms ease;
     transition: box-shadow 150ms ease;
@@ -14,12 +17,15 @@
 
 .StripeElement--focus {
     box-shadow: 0 1px 3px 0 #cfd7df;
+    font-family: 'Spartan', sans-serif !important;
 }
 
 .StripeElement--invalid {
     border-color: #fa755a;
+    font-family: 'Spartan', sans-serif !important;
 }
 
 .StripeElement--webkit-autofill {
+    font-family: 'Spartan', sans-serif;
     background-color: #fefde5 !important;
 }

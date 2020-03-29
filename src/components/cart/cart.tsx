@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ApolloError } from 'apollo-boost';
 import Spinner from '../UI/spinner';
 import Modal from '../UI/Modal';
+import { Link } from '@reach/router';
 type AppProps = {
   content?: {
     _id: string;
@@ -15,8 +16,9 @@ type AppProps = {
   }[];
   loading: boolean;
   error?: ApolloError;
-  incrementHandler: (id: string, count: number) => void;
+  incrementHandler: (id: string) => void;
   decrementHandler: (id: string) => void;
+  removeItemHandler: (id: string) => void;
   getStripeSecretHandler: () => void;
 };
 const Div = styled.div`
@@ -176,15 +178,12 @@ const CartComponent = memo(
     loading,
     incrementHandler,
     decrementHandler,
+    removeItemHandler,
     getStripeSecretHandler
   }: AppProps) => {
     if (loading && !content) {
-      console.log('do i render loading twice in cart.tsx?');
       return <Spinner />;
     }
-    // useEffect(() => {
-    //   console.log(content?.getCart);
-    // }, [content]);
     if (error) {
       return <Modal>{error.message}</Modal>;
     }
@@ -193,7 +192,7 @@ const CartComponent = memo(
         <Title>Shopping Cart</Title>
         {content?.map(item => {
           return (
-            <CartContainer>
+            <CartContainer key={item._id}>
               <CartItemImageContainer>
                 <CartItemImage src={item.mediaUrl} />
               </CartItemImageContainer>
@@ -210,21 +209,19 @@ const CartComponent = memo(
                   -
                 </CartItemCountButton>
                 <CartItemCount>{item.count}</CartItemCount>
-                <CartItemCountButton
-                  onClick={() => incrementHandler(item._id, item.count)}
-                >
+                <CartItemCountButton onClick={() => incrementHandler(item._id)}>
                   +
                 </CartItemCountButton>
               </CartItemCountContainer>
               <CartItemPrice>&#8358;{item.price}</CartItemPrice>
-              <CartItemButton />
+              <CartItemButton onClick={() => removeItemHandler(item._id)} />
             </CartContainer>
           );
         })}
         <div style={{ textAlign: 'center' }}>
           <ButtonContainer>
             <SlantedButton onClick={getStripeSecretHandler}>
-              Proceed to checkout
+              <Link to="/checkout">Proceed to checkout</Link>
             </SlantedButton>
             <CentralButton>Proceed to checkout</CentralButton>
           </ButtonContainer>

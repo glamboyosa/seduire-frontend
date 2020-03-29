@@ -46,7 +46,7 @@ const CartContainer = () => {
       error: transactionError
     }
   ] = useMutation<Stripe.StripeTrx_Trx, Stripe.StripeTrxVariables>(PROCESS_TRX);
-  const { setStripeHandler } = useContext();
+  const { stripeClientSecret, setStripeHandler } = useContext();
   const [cart, setCart] = useState<
     {
       _id: string;
@@ -59,16 +59,9 @@ const CartContainer = () => {
   >(null!);
   const { priceArray } = useTransformCart(cart);
   const [currency] = useState('NGN');
-  const incrementHandler = (id: string, count: number) => {
-    console.log('count is', count);
+  const incrementHandler = (id: string) => {
     const newCart = [...cart];
     const index = newCart.findIndex(el => el._id === id);
-    // have to mutably update state
-    console.log(cart[index].count, cart[index].price);
-    console.log(
-      newCart[index].count + 1,
-      newCart[index].price * (newCart[index].count + 1)
-    );
     newCart[index].count = newCart[index].count + 1;
     newCart[index].price = newCart[index].price * newCart[index].count;
     setCart(newCart);
@@ -76,9 +69,12 @@ const CartContainer = () => {
   const decrementHandler = (id: string) => {
     const newCart = [...cart];
     const index = newCart.findIndex(el => el._id === id);
-    // have to mutably update state
     newCart[index].count = newCart[index].count - 1;
     newCart[index].price = newCart[index].price * newCart[index].count;
+    setCart(newCart);
+  };
+  const removeItemHandler = (id: string) => {
+    const newCart = [...cart].filter(el => el._id !== id);
     setCart(newCart);
   };
   const getStripeSecretHandler = () => {
@@ -90,11 +86,20 @@ const CartContainer = () => {
     }
   }, [cartData]);
   useEffect(() => {
-    transactionData &&
-      setStripeHandler(
-        transactionData.processTransaction.clientSecret,
+    if (transactionData) {
+      localStorage.setItem(
+        'stripeClient',
+        transactionData.processTransaction.clientSecret
+      );
+      localStorage.setItem(
+        'stripePublishable',
         transactionData.processTransaction.publishableKey
       );
+      setStripeHandler(
+        transactionData.processTransaction.publishableKey,
+        transactionData.processTransaction.clientSecret
+      );
+    }
   }, [transactionData, setStripeHandler]);
   if (transactionData) {
     content = <Redirect to="/checkout" noThrow />;
@@ -106,6 +111,7 @@ const CartContainer = () => {
         getStripeSecretHandler={getStripeSecretHandler}
         incrementHandler={incrementHandler}
         decrementHandler={decrementHandler}
+        removeItemHandler={removeItemHandler}
         content={cart}
         loading={loading}
         error={error}
