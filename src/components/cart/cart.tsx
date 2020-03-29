@@ -38,7 +38,7 @@ const CartContainer = styled.div`
 const CartItemImageContainer = styled.figure`
   width: 7rem;
   height: 7rem;
-  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
   position: relative;
 `;
 const CartItemImage = styled.img`
@@ -219,15 +219,18 @@ const CartComponent = memo(
           );
         })}
         <div style={{ textAlign: 'center' }}>
-          <ButtonContainer>
+          <ButtonContainer onClick={getStripeSecretHandler}>
             <SlantedButton onClick={getStripeSecretHandler}>
-              <Link to="/checkout">Proceed to checkout</Link>
+              Proceed to checkout
             </SlantedButton>
-            <CentralButton>Proceed to checkout</CentralButton>
+            <CentralButton onClick={getStripeSecretHandler}>
+              Proceed to checkout
+            </CentralButton>
           </ButtonContainer>
         </div>
       </Div>
     );
   }
 );
+
 export default CartComponent;

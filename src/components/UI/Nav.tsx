@@ -180,12 +180,8 @@ const Nav = ({ cartCount }: AppProps) => {
   const [checkedState, setCheckedState] = useState(false);
   const [isClosed, setIsClosed] = useState(true);
   const { setTokenHandler } = useContextHandler();
-  const [getCart, { data, loading, error }] = useLazyQuery<Cart.getCart, null>(
-    GET_CART
-  );
+  const [getCart, { data }] = useLazyQuery<Cart.getCart, null>(GET_CART);
   const { data: cacheData } = useQuery(IS_LOGGED_IN);
-  console.log(loading);
-  console.log(error);
   const closedHandler = () => {
     getCart();
     setIsClosed(!isClosed);

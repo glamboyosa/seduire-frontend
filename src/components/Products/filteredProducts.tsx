@@ -9,9 +9,7 @@ import ProductsComponent from './choiceProducts';
 import { useParams } from '@reach/router';
 const All = () => {
   const sex = useParams();
-  console.log('param is', sex);
   sex.choice === 'men' ? (sex.choice = 'Male') : (sex.choice = 'Female');
-  console.log(sex.choice);
   const PRODUCTS = gql`
     query {
       getCategory(sex: "${sex.choice}"){

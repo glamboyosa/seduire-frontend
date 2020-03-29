@@ -52,7 +52,7 @@ const IndividualProductComponent = () => {
     Products.getProduct,
     null
   >(PRODUCTS);
-  const { data: cartData } = useQuery<Cart.getCart, null>(GET_CART);
+  const { data: cartData, refetch } = useQuery<Cart.getCart, null>(GET_CART);
   const [
     addToCart,
     { loading: cartLoading, data: addToCartData, error }
@@ -75,10 +75,13 @@ const IndividualProductComponent = () => {
     }
   };
   const { cartCount } = useCartCalculator(cartData?.getCart);
-  console.log(error?.message);
+  if (addToCartData) {
+    refetch();
+  }
   if (isAuth) {
     content = <Redirect to="/auth" noThrow />;
   }
+
   return (
     <div>
       {content}

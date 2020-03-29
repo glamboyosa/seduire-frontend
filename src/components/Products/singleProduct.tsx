@@ -174,4 +174,5 @@ const SingleProductComponent = memo(
     );
   }
 );
+
 export default SingleProductComponent;

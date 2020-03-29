@@ -102,6 +102,14 @@ const CartContainer = () => {
     }
   }, [transactionData, setStripeHandler]);
   if (transactionData) {
+    localStorage.setItem(
+      'stripeClient',
+      transactionData.processTransaction.clientSecret
+    );
+    localStorage.setItem(
+      'stripePublishable',
+      transactionData.processTransaction.publishableKey
+    );
     content = <Redirect to="/checkout" noThrow />;
   }
   return cacheData.isLoggedIn ? (

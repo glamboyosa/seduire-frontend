@@ -100,15 +100,13 @@ type AppProps = {
   content?: Cart.getCart;
 };
 const SideDrawerComponent = memo(({ closed, clicked, content }: AppProps) => {
-  console.log('we also get back', content?.getCart);
-
   return (
     <SideDrawer spellCheck={closed}>
       <ButtonHandler>
         <Button onClick={clicked} />
       </ButtonHandler>
       {content?.getCart && content.getCart.length !== 0 ? (
-        content?.getCart.slice(0, 3).map(el => {
+        content?.getCart.slice(0, 4).map(el => {
           return (
             <CartItemContainer>
               <CartItem>

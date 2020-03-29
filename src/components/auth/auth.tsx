@@ -160,7 +160,7 @@ const Auth = () => {
     e.preventDefault();
     if (!authPage) {
       localStorage.setItem('firstName', firstName);
-      localStorage.setItem('fullName', firstName + lastName);
+      localStorage.setItem('fullName', firstName + '' + lastName);
     }
     authPage
       ? getUserDetails({ variables: { email, password } })

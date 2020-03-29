@@ -38,7 +38,6 @@ const All = () => {
   `;
 
   const { data: cacheData } = useQuery(IS_LOGGED_IN);
-  console.log('is user logged in', cacheData.isLoggedIn);
   const { data, loading, error: productError } = useQuery<
     Products.getProducts,
     null

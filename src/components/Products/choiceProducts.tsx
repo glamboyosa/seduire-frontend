@@ -99,4 +99,5 @@ const ProductsComponent = memo(
     );
   }
 );
+
 export default ProductsComponent;

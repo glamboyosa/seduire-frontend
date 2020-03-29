@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import CardSection from './cardSection';
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
@@ -84,6 +84,8 @@ const CentralButton = styled.button`
   }
 `;
 const CheckoutForm = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>();
   const stripe = useStripe();
   const elements = useElements();
   const { stripeClientSecret, setStripeHandler } = useContext();
@@ -93,7 +95,6 @@ const CheckoutForm = () => {
   );
   const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-
     const result = await stripe!.confirmCardPayment(stripeClientSecret!, {
       payment_method: {
         card: elements!.getElement(CardElement)!,
@@ -103,20 +104,27 @@ const CheckoutForm = () => {
       }
     });
     if (!result) {
-      return <Spinner />;
+      setLoading(true);
     }
     if (result.error) {
       // Show error to your customer (e.g., insufficient funds)
-      console.log(result.error.message);
-      return <Modal>result.error.message</Modal>;
+      setError(result.error.message);
+      setLoading(false);
     } else {
       // The payment has been processed!
       if (result.paymentIntent?.status === 'succeeded') {
         // Show a success message to your customer
+        setLoading(false);
         navigate('/success');
       }
     }
   };
+  if (loading) {
+    return <Spinner />;
+  }
+  if (error && !loading) {
+    return <Modal>{error}</Modal>;
+  }
   return (
     <Div>
       <Form onSubmit={submitHandler}>
