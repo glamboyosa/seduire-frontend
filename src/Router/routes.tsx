@@ -15,7 +15,7 @@ const Routes = () => {
     <Suspense fallback={<Spinner />}>
       <Router>
         <Home path="/" />
-        <ProductChoice path="/productchoice" />
+        <ProductChoice path="/product-choice" />
         <Auth path="auth" />
         <AllProducts path="products" />
         <IndividualProduct path="product/:id" />

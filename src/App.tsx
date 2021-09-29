@@ -33,7 +33,7 @@ function App() {
   }, []);
   const cache = new InMemoryCache();
   const link = new HttpLink({
-    uri: 'https://seduire-backend.herokuapp.com/api/graphql',
+    uri: process.env.NODE_ENV === "production" ? 'https://seduire-backend.herokuapp.com/api/graphql': "http://localhost:5000/api/graphql",
     headers: {
       Authorization: token ? `Bearer ${token}` : ''
     }

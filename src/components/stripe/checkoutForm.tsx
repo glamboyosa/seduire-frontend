@@ -5,7 +5,7 @@ import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
 import { navigate } from '@reach/router';
 import useContext from '../../libs/hooks/useContext';
 import Modal from '../UI/Modal';
-import Spinner from '../UI/spinner';
+import { Loading } from '../utils/utils.style';
 const Div = styled.div`
   background-image: linear-gradient(
     to right bottom,
@@ -120,7 +120,7 @@ const CheckoutForm = () => {
     }
   };
   if (loading) {
-    return <Spinner />;
+    return <Loading>💰</Loading>;
   }
   if (error && !loading) {
     return <Modal>{error}</Modal>;

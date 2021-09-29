@@ -2,9 +2,9 @@ import React, { memo, useEffect } from 'react';
 import * as Cart from '../../libs/gql/cart';
 import styled from 'styled-components';
 import { ApolloError } from 'apollo-boost';
-import Spinner from '../UI/spinner';
 import Modal from '../UI/Modal';
 import { Link } from '@reach/router';
+import { Loading } from '../utils/utils.style';
 type AppProps = {
   content?: {
     _id: string;
@@ -182,7 +182,7 @@ const CartComponent = memo(
     getStripeSecretHandler
   }: AppProps) => {
     if (loading && !content) {
-      return <Spinner />;
+      return <Loading>💰</Loading>;
     }
     if (error) {
       return <Modal>{error.message}</Modal>;

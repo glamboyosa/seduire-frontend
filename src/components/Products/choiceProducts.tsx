@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import * as Products from '../../libs/gql/products';
 import styled from 'styled-components';
-import Spinner from '../UI/spinner';
 import Modal from '../UI/Modal';
 import { ApolloError } from 'apollo-boost';
 import { Link } from '@reach/router';
+import { Loading } from '../utils/utils.style';
 const Div = styled.div`
   margin-top: 4rem;
   display: flex;
@@ -65,7 +65,7 @@ type AppProps = {
 const ProductsComponent = memo(
   ({ content, loading, error, choice }: AppProps) => {
     if (loading && !content) {
-      return <Spinner />;
+      return <Loading>🚀</Loading>;
     }
 
     if (error) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from 'react';
 import * as Products from '../../libs/gql/products';
 import * as Cart from '../../libs/gql/cart';
 import styled from 'styled-components';
-import Spinner from '../UI/spinner';
+import { Loading } from '../utils/utils.style';
 import Modal from '../UI/Modal';
 import { ApolloError } from 'apollo-boost';
 const Div = styled.div`
@@ -121,7 +121,7 @@ const SingleProductComponent = memo(
       }
     }, [content]);
     if (loading && !content) {
-      return <Spinner />;
+      return <Loading>🚀</Loading>;;
     }
     if (error) {
       return <Modal>{error.message}</Modal>;

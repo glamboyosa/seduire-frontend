@@ -6,8 +6,8 @@ import * as Login from '../../libs/gql/login';
 import * as SignIn from '../../libs/gql/user';
 import { Redirect } from '@reach/router';
 import Modal from '../UI/Modal';
-import Spinner from '../UI/spinner';
 import useContext from '../../libs/hooks/useContext';
+import { Loading } from '../utils/utils.style';
 const Div = styled.div`
   text-align: center;
   position: relative;
@@ -156,8 +156,10 @@ const Auth = () => {
       setAuthPage(false);
     }
   }, [loginResponse, signUpResponse, setTokenHandler]);
+
   const authHandler = (e: React.SyntheticEvent) => {
     e.preventDefault();
+    
     if (!authPage) {
       localStorage.setItem('firstName', firstName);
       localStorage.setItem('fullName', firstName + '' + lastName);
@@ -170,13 +172,13 @@ const Auth = () => {
     setFirstName('');
     setLastName('');
   };
-  if (loading || isSigningUp) return <Spinner />;
+  if (loading || isSigningUp) return <Loading>🚀</Loading>;
   if (error || signUpError)
     return (
       <Modal>Error: {`${error?.message} or ${signUpError?.message}`}</Modal>
     );
   if (loginResponse) {
-    content = <Redirect to="/productchoice" noThrow />;
+    content = <Redirect to="/product-choice" noThrow />;
   }
   return authPage ? (
     <Div>
