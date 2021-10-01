@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
-import styled, { css } from 'styled-components';
-import gql from 'graphql-tag';
-import * as Login from '../../libs/gql/login';
-import * as SignIn from '../../libs/gql/user';
-import { Redirect } from '@reach/router';
-import Modal from '../UI/Modal';
-import useContext from '../../libs/hooks/useContext';
-import { Loading } from '../utils/utils.style';
+import React, { useState, useEffect } from "react";
+import { useLazyQuery, useMutation } from "@apollo/react-hooks";
+import styled, { css } from "styled-components";
+import gql from "graphql-tag";
+import * as Login from "../../libs/gql/login";
+import * as SignIn from "../../libs/gql/user";
+import { Redirect } from "@reach/router";
+import Modal from "../UI/Modal";
+import useContext from "../../libs/hooks/useContext";
+import { Loading } from "../utils/utils.style";
 const Div = styled.div`
   text-align: center;
   position: relative;
@@ -37,9 +37,9 @@ const Input = styled.input.attrs(() => ({}))`
   width: 50%;
   display: block;
   font-family: inherit;
-  padding: 1rem 2.5rem;
+  padding: 1.5rem 3rem;
   margin-bottom: 1rem;
-  border: none;
+  border: 1px solid #000;
   outline: none;
   font-size: 1.5rem;
   border-bottom: 1px solid grey;
@@ -68,9 +68,10 @@ const RedirectLink = styled.span`
   font-size: 1.5rem;
   color: -webkit-link;
   text-transform: underline;
+  margin-top: 5rem;
   text-align: center;
-  transform: ${props =>
-    props.spellCheck ? ' translateY(25rem)' : ' translateY(40rem)'};
+  transform: ${(props) =>
+    props.spellCheck ? " translateY(25rem)" : " translateY(40rem)"};
   top: 50%;
   left: 45%;
   position: absolute;
@@ -80,7 +81,7 @@ const RedirectLink = styled.span`
     font-size: 1.5rem;
   }
   @media only screen and (max-width: 800px) {
-    ${props =>
+    ${(props) =>
       !props.spellCheck &&
       css`
         & {
@@ -91,16 +92,16 @@ const RedirectLink = styled.span`
 `;
 const Auth = () => {
   let content;
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [authPage, setAuthPage] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
   const { setTokenHandler } = useContext();
   const LOGIN_DETAILS = gql`
-    query($email: String!, $password: String!) {
+    query ($email: String!, $password: String!) {
       login(email: $email, password: $password) {
         token
         expDate
@@ -110,7 +111,7 @@ const Auth = () => {
     }
   `;
   const SIGNUP_DETAILS = gql`
-    mutation(
+    mutation (
       $firstName: String!
       $lastName: String!
       $email: String!
@@ -132,13 +133,11 @@ const Auth = () => {
     }
   `;
 
-  const [
-    getUserDetails,
-    { loading, error, data: loginResponse }
-  ] = useLazyQuery<Login.login, Login.login_variables>(LOGIN_DETAILS);
+  const [getUserDetails, { loading, error, data: loginResponse }] =
+    useLazyQuery<Login.login, Login.login_variables>(LOGIN_DETAILS);
   const [
     signUp,
-    { loading: isSigningUp, error: signUpError, data: signUpResponse }
+    { loading: isSigningUp, error: signUpError, data: signUpResponse },
   ] = useMutation<SignIn.user, SignIn.user_variables>(SIGNUP_DETAILS);
   useEffect(() => {
     if (signUpResponse) {
@@ -148,9 +147,9 @@ const Auth = () => {
     }
     if (loginResponse) {
       setTokenHandler(loginResponse.login.token);
-      localStorage.setItem('Auth Token', loginResponse.login.token);
-      localStorage.setItem('expsIn', loginResponse.login.exp.toString());
-      localStorage.setItem('expDate', loginResponse.login.expDate);
+      localStorage.setItem("Auth Token", loginResponse.login.token);
+      localStorage.setItem("expsIn", loginResponse.login.exp.toString());
+      localStorage.setItem("expDate", loginResponse.login.expDate);
       setIsSignedUp(false);
       setIsSignedIn(true);
       setAuthPage(false);
@@ -159,18 +158,18 @@ const Auth = () => {
 
   const authHandler = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    
+
     if (!authPage) {
-      localStorage.setItem('firstName', firstName);
-      localStorage.setItem('fullName', firstName + '' + lastName);
+      localStorage.setItem("firstName", firstName);
+      localStorage.setItem("fullName", firstName + "" + lastName);
     }
     authPage
       ? getUserDetails({ variables: { email, password } })
       : signUp({ variables: { firstName, lastName, email, password } });
-    setEmail('');
-    setPassword('');
-    setFirstName('');
-    setLastName('');
+    setEmail("");
+    setPassword("");
+    setFirstName("");
+    setLastName("");
   };
   if (loading || isSigningUp) return <Loading>🚀</Loading>;
   if (error || signUpError)
@@ -184,7 +183,7 @@ const Auth = () => {
     <Div>
       {content}
       <Title>
-        Welcome back, <div>{localStorage.getItem('firstName') ?? '😊'}</div>
+        Welcome back <div style={{display: 'inline'}}>{localStorage.getItem("firstName") ?? "😊"}</div>
       </Title>
       <Form onSubmit={authHandler}>
         <Input
@@ -192,17 +191,17 @@ const Auth = () => {
           name="email"
           defaultValue={email}
           placeholder="Email Address"
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <Input
           type="password"
           name="password"
           defaultValue={password}
           placeholder="Password"
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
-        <Button>&rarr;</Button>
+        <Button>→</Button>
       </Form>
       <RedirectLink
         spellCheck={authPage}
@@ -220,30 +219,30 @@ const Auth = () => {
           name="firstName"
           defaultValue={email}
           placeholder="First Name"
-          onChange={e => setFirstName(e.target.value)}
+          onChange={(e) => setFirstName(e.target.value)}
         />
         <Input
           type="text"
           name="lastName"
           defaultValue={email}
           placeholder="Last Name"
-          onChange={e => setLastName(e.target.value)}
+          onChange={(e) => setLastName(e.target.value)}
         />
         <Input
           type="email"
           name="email"
           defaultValue={email}
           placeholder="Email Address"
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <Input
           type="password"
           name="password"
           defaultValue={password}
           placeholder="Password"
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <Button>&rarr;</Button>
+        <Button>→</Button>
       </Form>
       <RedirectLink
         spellCheck={authPage}

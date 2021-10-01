@@ -1,4 +1,4 @@
-import styled, {keyframes} from 'styled-components';
+import styled, { keyframes } from "styled-components";
 
 const rotateKeyframes = keyframes`
 from {
@@ -13,12 +13,10 @@ const Center = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 1rem;
+  margin-top: 7rem;
 `;
 
 const Container = styled.div``;
-
-
 
 const Loading = styled.div`
   font-size: 3.5rem;
@@ -26,5 +24,4 @@ const Loading = styled.div`
   animation: ${rotateKeyframes} 2s linear infinite;
 `;
 
-
-export {Center, Container, Loading};
+export { Center, Container, Loading };

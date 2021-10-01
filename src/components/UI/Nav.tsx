@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
-import { Link, navigate } from '@reach/router';
-import gql from 'graphql-tag';
-import { useLazyQuery } from '@apollo/react-hooks';
-import * as Cart from '../../libs/gql/cart';
-import { FaShoppingBag } from 'react-icons/fa';
-import SideDrawer from '../UI/sidedrawer';
-import { useQuery } from 'react-apollo';
-import useContextHandler from '../../libs/hooks/useContext';
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
+import { Link, navigate } from "@reach/router";
+import gql from "graphql-tag";
+import { useLazyQuery } from "@apollo/react-hooks";
+import * as Cart from "../../libs/gql/cart";
+import { FaShoppingBag } from "react-icons/fa";
+import SideDrawer from "../UI/sidedrawer";
+import { useQuery } from "react-apollo";
+import useContextHandler from "../../libs/hooks/useContext";
 type AppProps = {
   cartCount: Number;
 };
@@ -18,8 +18,8 @@ const Container = styled.div`
   position: fixed;
   transition: all 0.1s;
   z-index: 300;
-  height: ${props => (props.spellCheck ? '50vh' : '5rem')};
-  box-shadow: ${props => props.spellCheck && '0 1rem 1rem rgba(0,0,0,0.5)'};
+  height: ${(props) => (props.spellCheck ? "50vh" : "5rem")};
+  box-shadow: ${(props) => props.spellCheck && "0 1rem 1rem rgba(0,0,0,0.5)"};
   @media only screen and (max-width: 800px) {
     margin-top: 0;
   }
@@ -67,26 +67,26 @@ const Navigation = styled.nav`
   }
   @media only screen and (max-width: 800px) {
     & {
-      visibility: ${props => (props.spellCheck ? 'visible;' : 'hidden;')};
-      top: ${props => props.spellCheck && '50%;'};
+      visibility: ${(props) => (props.spellCheck ? "visible;" : "hidden;")};
+      top: ${(props) => props.spellCheck && "50%;"};
 
-      left: ${props => props.spellCheck && '50%;'};
-      transform: ${props => props.spellCheck && 'translate(-50%, -50%);'};
-      width: ${props => props.spellCheck && '100%;'};
+      left: ${(props) => props.spellCheck && "50%;"};
+      transform: ${(props) => props.spellCheck && "translate(-50%, -50%);"};
+      width: ${(props) => props.spellCheck && "100%;"};
     }
     .navigation {
-      flex-direction: ${props => props.spellCheck && 'column'};
-      justify-items: ${props => props.spellCheck && 'space-evenly'};
-      align-items: ${props => props.spellCheck && 'center'};
-      display: ${props => props.spellCheck && 'flex'};
+      flex-direction: ${(props) => props.spellCheck && "column"};
+      justify-items: ${(props) => props.spellCheck && "space-evenly"};
+      align-items: ${(props) => props.spellCheck && "center"};
+      display: ${(props) => props.spellCheck && "flex"};
     }
     .navigation__item {
-      margin-bottom: ${props => props.spellCheck && '3rem'};
+      margin-bottom: ${(props) => props.spellCheck && "3rem"};
     }
   }
 `;
 const Label = styled.label.attrs(() => ({
-  for: 'checkbox'
+  for: "checkbox",
 }))`
   position: relative;
   float: right;
@@ -103,7 +103,7 @@ const Label = styled.label.attrs(() => ({
   }
   &::after,
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
   }
@@ -114,7 +114,7 @@ const Label = styled.label.attrs(() => ({
   &::after {
     top: 1rem;
   }
-  ${props =>
+  ${(props) =>
     props.spellCheck &&
     css`
       & {
@@ -140,7 +140,7 @@ const Label = styled.label.attrs(() => ({
   }
 `;
 const Input = styled.input.attrs(() => ({
-  type: 'checkbox'
+  type: "checkbox",
 }))`
   display: inline-block;
   width: 0;
@@ -189,10 +189,10 @@ const Nav = ({ cartCount }: AppProps) => {
   const logoutHandler = (e: React.SyntheticEvent) => {
     e.preventDefault();
     setTokenHandler(null);
-    localStorage.removeItem('Auth Token');
-    localStorage.removeItem('expsIn');
-    localStorage.removeItem('expDate');
-    navigate('/');
+    localStorage.removeItem("Auth Token");
+    localStorage.removeItem("expsIn");
+    localStorage.removeItem("expDate");
+    navigate("/");
   };
   return (
     <Container spellCheck={checkedState}>
@@ -213,7 +213,7 @@ const Nav = ({ cartCount }: AppProps) => {
         <ul className="navigation">
           {cacheData.isLoggedIn && (
             <li className="navigation__item">
-              <span style={{ cursor: 'pointer' }} onClick={logoutHandler}>
+              <span style={{ cursor: "pointer" }} onClick={logoutHandler}>
                 Logout
               </span>
             </li>
@@ -221,8 +221,8 @@ const Nav = ({ cartCount }: AppProps) => {
           <li className="navigation__item">
             <Link to="/auth">
               {cacheData.isLoggedIn
-                ? `hi, ${localStorage.getItem('firstName') ?? ''}`
-                : 'Log In/Sign Up'}
+                ? `hi, ${localStorage.getItem("firstName") ?? ""}`
+                : "Log In/Sign Up"}
             </Link>
           </li>
           <li className="navigation__item">

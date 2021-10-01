@@ -1,11 +1,11 @@
-import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import * as Products from '../../libs/gql/products';
-import * as Cart from '../../libs/gql/cart';
-import gql from 'graphql-tag';
-import Nav from '../UI/Nav';
-import useCartCalculator from '../../libs/hooks/useCartCalculator';
-import ProductsComponent from './products';
+import React from "react";
+import { useQuery } from "@apollo/react-hooks";
+import * as Products from "../../libs/gql/products";
+import * as Cart from "../../libs/gql/cart";
+import gql from "graphql-tag";
+import Nav from "../UI/Nav";
+import useCartCalculator from "../../libs/hooks/useCartCalculator";
+import AllProductsComponent from "./products";
 const All = () => {
   const PRODUCTS = gql`
     query {
@@ -38,19 +38,23 @@ const All = () => {
   `;
 
   const { data: cacheData } = useQuery(IS_LOGGED_IN);
-  const { data, loading, error: productError } = useQuery<
-    Products.getProducts,
-    null
-  >(PRODUCTS);
-  const { data: cartData, loading: cartLoading, error: cartError } = useQuery<
-    Cart.getCart,
-    null
-  >(GET_CART);
+  const {
+    data,
+    loading,
+    error: productError,
+  } = useQuery<Products.getProducts, null>(PRODUCTS);
+  const {
+    data: cartData,
+    loading: cartLoading,
+    error: cartError,
+  } = useQuery<Cart.getCart, null>(GET_CART);
   const { cartCount } = useCartCalculator(cartData?.getCart);
+
+
   return (
     <div>
       <Nav cartCount={cartCount} />;
-      <ProductsComponent
+      <AllProductsComponent
         content={data}
         loading={loading}
         error={productError}

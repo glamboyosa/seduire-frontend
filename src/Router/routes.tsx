@@ -1,18 +1,18 @@
-import React, { Suspense, lazy } from 'react';
-import Home from '../pages/index';
-import ProductChoice from '../pages/productchoice';
-import Auth from '../pages/auth';
-import AllProducts from '../pages/products';
-import FilteredProducts from '../pages/filteredProducts';
-import IndividualProduct from '../pages/individualProducts';
-import Success from '../pages/success';
-import { Router } from '@reach/router';
-import Spinner from '../components/UI/spinner';
+import React, { Suspense, lazy } from "react";
+import Home from "../pages/index";
+import ProductChoice from "../pages/productchoice";
+import Auth from "../pages/auth";
+import AllProducts from "../pages/products";
+import FilteredProducts from "../pages/filteredProducts";
+import IndividualProduct from "../pages/individualProducts";
+import Success from "../pages/success";
+import { Router } from "@reach/router";
+import { Loading } from "../components/utils/utils.style";
 const Routes = () => {
-  const Cart = lazy(() => import('../pages/cart'));
-  const Checkout = lazy(() => import('../pages/checkout'));
+  const Cart = lazy(() => import("../pages/cart"));
+  const Checkout = lazy(() => import("../pages/checkout"));
   return (
-    <Suspense fallback={<Spinner />}>
+    <Suspense fallback={<Loading>🚀</Loading>}>
       <Router>
         <Home path="/" />
         <ProductChoice path="/product-choice" />
