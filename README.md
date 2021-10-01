@@ -32,4 +32,4 @@ yarn start
 ```
 
 This opens up a website at `http://localhost:3000`
->**Note** Backend can be found [here](https://github.com/glamboyosa/seduire-frontend).
+>**Note** Backend can be found [here](https://github.com/glamboyosa/seduire-backend).
